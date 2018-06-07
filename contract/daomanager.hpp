@@ -11,9 +11,9 @@ using std::string;
 class daomanager: public eosio::contract {
 public:
 	bool create(uint64_t id, account_name owner, string name, string desc);
-	bool updatae_owner(string new_owner);
-	bool update_name(string new_name);
-	bool update_desc(string new_desc);
+	bool update_owner(uint64_t id, account_name new_owner);
+	bool update_name(uint64_t id, string new_name);
+	bool update_desc(uint64_t id, string new_desc);
 	bool remove(uint64_t id);
 
 private:
