@@ -5,7 +5,7 @@ bool daomanager::create(uint64_t id, account_name owner, string name,
 	print("id: ", id, ", owner: ", owner, "name: ", name, "desc: ", desc);
 	dao_index daos(_self, _self);
 	auto it = daos.find(id);
-	eosio_asset(it == daos.end(), "dao id exists!");
+	eosio_assert(it == daos.end(), "dao id exists!");
 	daos.emplace(_self, [&](auto &d) {
 		d.id = id;
 		d.owner = owner;
@@ -17,11 +17,11 @@ bool daomanager::create(uint64_t id, account_name owner, string name,
 	return true;
 }
 
-bool daomanager::updatae_owner(string new_owner) {
+bool daomanager::update_owner(uint64_t id, account_name new_owner) {
 	print("change owner to: ", new_owner);
 	dao_index daos(_self, _self);
 	auto it = daos.find(id);
-	eosio_asset(it != daos.end(), "dao id doesn't exist!");
+	eosio_assert(it != daos.end(), "dao id doesn't exist!");
 	daos.modify(it, _self, [&](auto &d) {
 		d.owner = new_owner;
 	});
@@ -29,11 +29,11 @@ bool daomanager::updatae_owner(string new_owner) {
 	return true;
 }
 
-bool daomanager::update_name(string new_name) {
+bool daomanager::update_name(uint64_t id, string new_name) {
 	print("change name to: ", new_name);
 	dao_index daos(_self, _self);
 	auto it = daos.find(id);
-	eosio_asset(it != daos.end(), "dao id doesn't exist!");
+	eosio_assert(it != daos.end(), "dao id doesn't exist!");
 	daos.modify(it, _self, [&](auto &d) {
 		d.name = new_name;
 	});
@@ -41,13 +41,13 @@ bool daomanager::update_name(string new_name) {
 	return true;
 }
 
-bool daomanager::update_desc(string new_desc) {
+bool daomanager::update_desc(uint64_t id, string new_desc) {
 	print("change desc to: ", new_desc);
 	dao_index daos(_self, _self);
 	auto it = daos.find(id);
-	eosio_asset(it != daos.end(), "dao id doesn't exist!");
+	eosio_assert(it != daos.end(), "dao id doesn't exist!");
 	daos.modify(it, _self, [&](auto &d) {
-		d.owner = new_desc;
+		d.desc = new_desc;
 	});
 
 	return true;
@@ -57,7 +57,7 @@ bool daomanager::remove(uint64_t id) {
 	print("remove dao by id: ", id);
 	dao_index daos(_self, _self);
 	auto it = daos.find(id);
-	eosio_asset(it != daos.end(), "dao id doesn't exist!");
+	eosio_assert(it != daos.end(), "dao id doesn't exist!");
 	daos.erase(it);
 
 	return true;
