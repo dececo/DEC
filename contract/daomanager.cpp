@@ -1,66 +1,56 @@
 #include "daomanager.hpp"
 
-bool daomanager::create(uint64_t id, account_name owner, string name,
+void daomanager::create(uint64_t id, account_name owner, string name,
 		string desc) {
-	print("id: ", id, ", owner: ", owner, "name: ", name, "desc: ", desc);
-	dao_index daos(_self, _self);
-	auto it = daos.find(id);
-	eosio_assert(it == daos.end(), "dao id exists!");
-	daos.emplace(_self, [&](auto &d) {
+	dao_index dao(_self, _self);
+	auto it = dao.find(id);
+	eosio_assert(it == dao.end(), "dao id already exists!");
+	dao.emplace(_self, [&](auto &d) {
 		d.id = id;
 		d.owner = owner;
 		d.name = name;
 		d.desc = desc;
 		d.timestamp = 1000; //TODO
 		});
-
-	return true;
+	print("create dao, id: ", id, ", owner: ", owner, ", name: ", name, ", desc: ", desc, ".");
 }
 
-bool daomanager::update_owner(uint64_t id, account_name new_owner) {
-	print("change owner to: ", new_owner);
-	dao_index daos(_self, _self);
-	auto it = daos.find(id);
-	eosio_assert(it != daos.end(), "dao id doesn't exist!");
-	daos.modify(it, _self, [&](auto &d) {
+void daomanager::updateowner(uint64_t id, account_name new_owner) {
+	dao_index dao(_self, _self);
+	auto it = dao.find(id);
+	eosio_assert(it != dao.end(), "dao id doesn't exist!");
+	dao.modify(it, _self, [&](auto &d) {
 		d.owner = new_owner;
 	});
-
-	return true;
+	print("change owner to: ", new_owner);
 }
 
-bool daomanager::update_name(uint64_t id, string new_name) {
-	print("change name to: ", new_name);
-	dao_index daos(_self, _self);
-	auto it = daos.find(id);
-	eosio_assert(it != daos.end(), "dao id doesn't exist!");
-	daos.modify(it, _self, [&](auto &d) {
+void daomanager::updatename(uint64_t id, string new_name) {
+	dao_index dao(_self, _self);
+	auto it = dao.find(id);
+	eosio_assert(it != dao.end(), "dao id doesn't exist!");
+	dao.modify(it, _self, [&](auto &d) {
 		d.name = new_name;
 	});
-
-	return true;
+	print("change name to: ", new_name);
 }
 
-bool daomanager::update_desc(uint64_t id, string new_desc) {
-	print("change desc to: ", new_desc);
-	dao_index daos(_self, _self);
-	auto it = daos.find(id);
-	eosio_assert(it != daos.end(), "dao id doesn't exist!");
-	daos.modify(it, _self, [&](auto &d) {
+void daomanager::updatedesc(uint64_t id, string new_desc) {
+	dao_index dao(_self, _self);
+	auto it = dao.find(id);
+	eosio_assert(it != dao.end(), "dao id doesn't exist!");
+	dao.modify(it, _self, [&](auto &d) {
 		d.desc = new_desc;
 	});
-
-	return true;
+	print("change desc to: ", new_desc);
 }
 
-bool daomanager::remove(uint64_t id) {
+void daomanager::remove(uint64_t id) {
 	print("remove dao by id: ", id);
-	dao_index daos(_self, _self);
-	auto it = daos.find(id);
-	eosio_assert(it != daos.end(), "dao id doesn't exist!");
-	daos.erase(it);
-
-	return true;
+	dao_index dao(_self, _self);
+	auto it = dao.find(id);
+	eosio_assert(it != dao.end(), "dao id doesn't exist!");
+	dao.erase(it);
 }
 
-EOSIO_ABI(daomanager, (create)(update_owner)(update_name)(update_desc)(remove))
+EOSIO_ABI(daomanager, (create)(updateowner)(updatename)(updatedesc)(remove))
