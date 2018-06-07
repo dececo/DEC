@@ -1,6 +1,6 @@
 /**
  *  @file
- *  @copyright defined in eos/LICENSE.txt
+ *  @copyright defined in LICENSE.txt
  */
 #include <eosiolib/eosio.hpp>
 #include <string>
