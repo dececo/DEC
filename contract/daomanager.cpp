@@ -62,3 +62,5 @@ bool daomanager::remove(uint64_t id) {
 
 	return true;
 }
+
+EOSIO_ABI(daomanager, (create)(update_owner)(update_name)(update_desc)(remove))
