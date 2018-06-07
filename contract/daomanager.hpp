@@ -10,13 +10,17 @@ using std::string;
 
 class daomanager: public eosio::contract {
 public:
-	bool create(uint64_t id, account_name owner, string name, string desc);
-	bool update_owner(uint64_t id, account_name new_owner);
-	bool update_name(uint64_t id, string new_name);
-	bool update_desc(uint64_t id, string new_desc);
-	bool remove(uint64_t id);
+	using contract::contract;
+	daomanager(account_name self) : contract(self) {}
+
+	void create(uint64_t id, account_name owner, string name, string desc);
+	void updateowner(uint64_t id, account_name new_owner);
+	void updatename(uint64_t id, string new_name);
+	void updatedesc(uint64_t id, string new_desc);
+	void remove(uint64_t id);
 
 private:
+	// @abi table daos i64
 	struct dao {
 		uint64_t id;
 		account_name owner;
@@ -30,5 +34,5 @@ private:
 
 		EOSLIB_SERIALIZE( dao, (id)(owner)(name)(desc)(timestamp) )
 	};
-	typedef eosio::multi_index<N(dao), dao> dao_index;
+	typedef eosio::multi_index<N(daos), dao> dao_index;
 };
