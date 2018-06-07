@@ -11,7 +11,9 @@ using std::string;
 class daomanager: public eosio::contract {
 public:
 	using contract::contract;
-	daomanager(account_name self) : contract(self) {}
+	daomanager(account_name self) :
+			contract(self) {
+	}
 
 	void create(uint64_t id, account_name owner, string name, string desc);
 	void updateowner(uint64_t id, account_name new_owner);
