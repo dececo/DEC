@@ -3,14 +3,15 @@
  *  @copyright defined in LICENSE.txt
  */
 #include <eosiolib/eosio.hpp>
-#include <string>
+#include <set>
 
 using namespace eosio;
+using std::set;
 
 class committeemanager: public eosio::contract {
 public:
 	using contract::contract;
-	committee(account_name self) :
+	committeemanager(account_name self) :
 			contract(self) {
 	}
 
@@ -33,4 +34,4 @@ private:
 
 	typedef eosio::multi_index<N(committee), member_list> committee_index;
 
-}
+};
