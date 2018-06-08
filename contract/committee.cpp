@@ -6,45 +6,45 @@ using std::string;
 using std::ostringstream;
 
 void committeemanager::allmember(uint64_t id,
-		set<account_name>& account_list) {
+		vector<account_name>& account_list) {
 	committee_index ci(_self, _self);
 	auto it = ci.find(id);
 	eosio_assert(it != ci.end(), "id doesn't exist!");
-	member_list ml = *it;
-	ostringstream oss;
-	for(auto it2 = ml.account_list.begin(); it2 != ml.account_list.end(); it2++) {
-		oss << *it2 << ",";
-	}
-	string l = oss.str();
-	print("id: ", id, ", committee: [", l, "]");
+	print("id: ", id, ", committee: [", it->account_list.size(), "]");
 }
 
 void committeemanager::addmember(uint64_t id, account_name name) {
 	committee_index ci(_self, _self);
 	auto it = ci.find(id);
-	eosio_assert(it != ci.end(), "id doesn't exist!");
-	member_list ml = *it;
-	ml.account_list.insert(name);
-	ostringstream oss;
-	for(auto it2 = ml.account_list.begin(); it2 != ml.account_list.end(); it2++) {
-		oss << *it2 << ",";
+	if(it == ci.end()) {
+		ci.emplace(_self, [&](auto &c) {
+			c.id = id;
+			c.account_list.push_back(name);
+		});
+		print("id: ", id, ", committee: [", ci.find(id)->account_list.size(), "]");
+	} else {
+		ci.modify(it, _self, [&](auto &c) {
+			c.account_list.push_back(name);
+		});
+		print("id: ", id, ", committee: [", it->account_list.size(), "]");
 	}
-	string l = oss.str();
-	print("id: ", id, ", committee: [", l, "]");
 }
 
 void committeemanager::removemember(uint64_t id, account_name name) {
 	committee_index ci(_self, _self);
 	auto it = ci.find(id);
 	eosio_assert(it != ci.end(), "id doesn't exist!");
-	member_list ml = *it;
-	ml.account_list.erase(name);
-	ostringstream oss;
-	for(auto it2 = ml.account_list.begin(); it2 != ml.account_list.end(); it2++) {
-		oss << *it2 << ",";
+	vector<account_name> al;
+	for(auto a : it->account_list) {
+		if(a != name) {
+			al.push_back(a);
+		}
 	}
-	string l = oss.str();
-	print("id: ", id, ", committee: [", l, "]");
+	// 即便委员会为空，也不删除改行数据
+	ci.modify(it, _self, [&](auto &c) {
+		c.account_list = al;
+	});
+	print("id: ", id, ", committee: [", it->account_list.size(), "]");
 }
 
 EOSIO_ABI(committeemanager, (allmember)(addmember)(removemember))
