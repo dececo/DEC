@@ -28,9 +28,6 @@ private:
 		}
 
 		EOSLIB_SERIALIZE( member_list, (id)(account_list) )
-/*
-		EOSLIB_SERIALIZE( member_list, (id) )
-*/
 	};
 
 	typedef eosio::multi_index<N(committee), member_list> committee_index;

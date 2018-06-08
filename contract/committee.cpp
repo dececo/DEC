@@ -16,12 +16,13 @@ void committeemanager::allmember(uint64_t id,
 void committeemanager::addmember(uint64_t id, account_name name) {
 	committee_index ci(_self, _self);
 	auto it = ci.find(id);
-	if(it == ci.end()) {
+	if (it == ci.end()) {
 		ci.emplace(_self, [&](auto &c) {
 			c.id = id;
 			c.account_list.push_back(name);
 		});
-		print("id: ", id, ", committee: [", ci.find(id)->account_list.size(), "]");
+		print("id: ", id, ", committee: [", ci.find(id)->account_list.size(),
+				"]");
 	} else {
 		ci.modify(it, _self, [&](auto &c) {
 			c.account_list.push_back(name);
@@ -34,9 +35,9 @@ void committeemanager::removemember(uint64_t id, account_name name) {
 	committee_index ci(_self, _self);
 	auto it = ci.find(id);
 	eosio_assert(it != ci.end(), "id doesn't exist!");
-	vector<account_name> al;
-	for(auto a : it->account_list) {
-		if(a != name) {
+	vector < account_name > al;
+	for (auto a : it->account_list) {
+		if (a != name) {
 			al.push_back(a);
 		}
 	}
