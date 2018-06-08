@@ -1,9 +1,4 @@
-#include <sstream>
-#include <string>
 #include "committee.hpp"
-
-using std::string;
-using std::ostringstream;
 
 void committeemanager::allmember(uint64_t id,
 		vector<account_name>& account_list) {
