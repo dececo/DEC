@@ -1,14 +1,13 @@
 #include "proposal.hpp"
 
-void proposals::vote(uint64_t id,
-		account_name account, uint32_t vote) {
+void proposals::vote(uint64_t id, account_name account, uint32_t vote) {
 	proposal_index pi(_self, _self);
 	auto it = pi.find(id);
 	eosio_assert(it != pi.end(), "id doesn't exist!");
-	
-	pi.modify(it, _self,[&](auto &p) {
-			p.votes[account] = vote;
-			});
+
+	pi.modify(it, _self, [&](auto &p) {
+		p.votes[account] = vote;
+	});
 	print("id: ", id, ", account: ", account, ", vote: ", vote);
 }
 

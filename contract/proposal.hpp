@@ -8,7 +8,6 @@
 using namespace eosio;
 using boost::container::flat_map;
 
-
 class proposals: public eosio::contract {
 public:
 	using contract::contract;
